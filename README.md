@@ -144,6 +144,27 @@ cd /Users/louisonbobin/alaia-site && python3 -m http.server 4321
 
 ---
 
+## Déploiement
+
+- **Dépôt** : https://github.com/louisonb4-arch/alaia (branche `main`)
+- **En ligne** : **https://alaia-site-lac.vercel.app**
+- Projet Vercel `alaia-site`, équipe `louis-projects-a1487864`, compte `louisonb4-3247`.
+
+⚠️ **`alaia-site.vercel.app` n'est PAS ce site** — ce sous-domaine appartient déjà à un
+autre utilisateur Vercel (il renvoie son site à lui). Vercel a donc attribué le suffixe
+`-lac`. Ne jamais communiquer l'URL courte : c'est `alaia-site-lac.vercel.app`.
+Le sujet disparaîtra le jour où un vrai nom de domaine sera branché.
+
+Redéployer (pas d'auto-deploy au push — les deux gestes sont séparés) :
+
+```bash
+cd /Users/louisonbobin/alaia-site   # ⚠️ toujours depuis la racine :
+git push                            #    lancé d'un sous-dossier, Vercel crée
+npx -y vercel deploy --prod --yes   #    un projet parasite au nom du dossier
+```
+
+---
+
 ## ⚠️ Ce qu'il manque
 
 ### Photos — 11 photos réelles en place
