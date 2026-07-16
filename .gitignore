@@ -1,0 +1,9 @@
+# Vercel — jamais commité : un `vercel deploy` lancé depuis un sous-dossier
+# crée sinon un projet parasite lié au mauvais répertoire.
+.vercel
+
+# macOS
+.DS_Store
+
+# Sources brutes non servies (originaux avant recadrage/optimisation)
+assets/img/_src-*

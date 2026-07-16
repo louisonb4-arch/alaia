@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alaïa café &amp; boutique — Café de spécialité, cuisine de saison et boutique à Nantes</title>
+<meta name="description" content="Café de spécialité, cuisine de saison et boutique d'artisans, 4 rue de Budapest à Nantes. Du mardi au samedi, sur place ou à emporter, sans réservation. Chiens bienvenus.">
+<link rel="canonical" href="/">
+<meta name="theme-color" content="#AFD3C5">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Alaïa café &amp; boutique">
+<meta property="og:title" content="Alaïa café &amp; boutique — Nantes">
+<meta property="og:description" content="Café de spécialité, cuisine de saison et boutique. 4 rue de Budapest, Nantes. Du mardi au samedi, sans réservation.">
+<meta property="og:image" content="assets/img/facade.jpg">
+<meta property="og:image:alt" content="La devanture vert d'eau d'Alaïa, rue de Budapest à Nantes.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/favicon-180.png">
+
+<link rel="preload" href="assets/fonts/bricolage-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/supreme-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/style.css">
+<script type="module" src="assets/js/main.js"></script>
+
+<!-- ═══════════════════ L'OUVERTURE — « le peintre passe » ═══════════════
+     Pas de rideau, pas d'écran par-dessus : c'est la devanture elle-même qui
+     se peint. Le mot d'abord, puis les trois lettrages, puis les fils, puis
+     la vitre se dégage. On repose la peinture dans l'ordre où elle a été
+     posée en vrai.
+
+     Ce script est en ligne et sans dépendance, pour deux raisons :
+     · il doit poser la classe AVANT le premier rendu (sinon le hero clignote) ;
+     · il se démonte tout seul. Si le module JS tombe, les filets de sécurité
+       ci-dessous rendent la page malgré tout — jamais d'écran resté noir. -->
+<script>
+(function () {
+  var d = document.documentElement;
+  var plat  = /[?&]plat/.test(location.search);
+  var calme = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // On retombe toujours sur la devanture : le navigateur ne restaure pas le scroll.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  // `?plat` doit être posé AVANT le premier rendu, sinon la première seconde
+  // s'anime quand même et les captures de contrôle sont faussées.
+  if (plat) d.setAttribute('data-plat', '');
+  if (plat || calme) return;      // ?plat et mouvement réduit : aucune ouverture.
+  d.classList.add('intro');
+
+  var fini = function () { d.classList.remove('intro', 'intro-go'); };
+  var go = function () {
+    d.classList.add('intro-go');
+    setTimeout(fini, 3200);       // on retire les classes une fois la peinture sèche
+  };
+
+  // On attend les polices : peindre un mot en police de repli puis le voir
+  // sauter, c'est pire que pas d'animation du tout.
+  var parti = false;
+  var lance = function () {
+    if (parti) return;
+    parti = true;
+    requestAnimationFrame(go);
+  };
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(lance);
+    setTimeout(lance, 1200);      // filet : si les polices traînent, on part quand même
+  } else {
+    lance();
+  }
+  setTimeout(fini, 6000);         // filet dur : la page est lisible quoi qu'il arrive
+})();
+</script>
+</head>
+
+<body>
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<!-- ═══════════════════════════ L'ENSEIGNE ═══════════════════════════════
+     Le bandeau vert d'eau de la devanture, repris en barre de navigation. -->
+<header class="enseigne">
+  <div class="enseigne__in">
+    <a class="enseigne__marque" href="/" aria-label="Alaïa café & boutique — accueil">
+      <span class="marque marque--script" role="img" aria-label="Alaïa"></span>
+      <span class="peint enseigne__mention" aria-hidden="true">Café &amp; boutique</span>
+    </a>
+
+    <nav class="enseigne__nav" aria-label="Navigation principale">
+      <a class="enseigne__lien peint" href="#lieu"     data-section="lieu">Le lieu</a>
+      <a class="enseigne__lien peint" href="#cafe"     data-section="cafe">Le café</a>
+      <a class="enseigne__lien peint" href="#table"    data-section="table">À table</a>
+      <a class="enseigne__lien peint" href="#boutique" data-section="boutique">La boutique</a>
+      <a class="enseigne__lien peint" href="#horizon"  data-section="horizon">Horizon</a>
+      <a class="enseigne__lien peint" href="#trouver"  data-section="trouver">Nous trouver</a>
+      <a class="carreau" href="carte.html">
+        La carte
+        <svg class="fleche" width="13" height="9" viewBox="0 0 13 9" fill="none" aria-hidden="true">
+          <path d="M0 4.5h11M7.5 1 11 4.5 7.5 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </nav>
+
+    <button class="cle" type="button" aria-expanded="false" aria-controls="tiroir">
+      <span class="lecteur">Ouvrir le menu</span>
+      <span class="cle__trait" aria-hidden="true"></span>
+      <span class="cle__trait" aria-hidden="true"></span>
+      <span class="cle__trait" aria-hidden="true"></span>
+    </button>
+  </div>
+</header>
+
+<div class="tiroir" id="tiroir" aria-hidden="true">
+  <a class="tiroir__lien" href="#lieu">Le lieu <span class="numero peint">01</span></a>
+  <a class="tiroir__lien" href="#cafe">Le café <span class="numero peint">02</span></a>
+  <a class="tiroir__lien" href="#table">À table <span class="numero peint">03</span></a>
+  <a class="tiroir__lien" href="#boutique">La boutique <span class="numero peint">04</span></a>
+  <a class="tiroir__lien" href="#horizon">Horizon <span class="numero peint">05</span></a>
+  <a class="tiroir__lien" href="#trouver">Nous trouver <span class="numero peint">07</span></a>
+  <a class="tiroir__lien" href="carte.html">La carte <span class="numero peint">→</span></a>
+  <div class="tiroir__pied">
+    <p class="peint">Mardi → Samedi · 8:30 → 17:30</p>
+    <p class="peint">4 rue de Budapest, Nantes · Sans réservation</p>
+  </div>
+</div>
+
+<main id="contenu">
+
+<!-- ═══════════════════════════ LA DEVANTURE ═════════════════════════════
+     Le hero ne raconte rien qu'Alaïa n'écrive déjà sur sa vitre : les trois
+     moments peints sur le carreau de droite, les trois services peints sur
+     celui de gauche. Le site ne fait que les mettre à l'échelle. -->
+<section class="devanture" aria-labelledby="titre-principal">
+
+  <!-- Les feuilles et les grains peints sur le bandeau, redessinés au trait -->
+  <svg class="devanture__jardin dessin tracer" viewBox="0 0 250 130" fill="none" aria-hidden="true">
+    <path class="trait" d="M10 104C14 84 28 58 52 42c2 24-12 52-42 62Z"/>
+    <path class="trait" d="M10 104 52 42M20 92l10-8M27 80l11-8M34 68l10-8"/>
+    <path class="trait" d="M90 98C84 82 72 64 58 56c2 20 12 36 32 42Z"/>
+    <path class="trait" d="M90 98 58 56"/>
+    <path class="trait" d="M118 105c-2-25 0-55 6-77"/>
+    <path class="trait" d="M117 92c-7-4-11-12-12-20 8 2 13 12 12 20ZM119 78c7-4 12-12 13-20-8 2-14 12-13 20ZM120 64c-7-4-11-12-12-20 8 2 13 12 12 20Z"/>
+    <path class="trait" d="M158 100c-2-28 2-56 8-78"/>
+    <path class="trait" d="M157 88c-6-4-9-10-10-16M159 74c6-4 9-10 10-16M160 60c-6-4-9-10-10-16M162 46c6-4 9-10 10-16"/>
+    <g transform="translate(198 52) rotate(-18)">
+      <ellipse class="trait" rx="8" ry="5.5"/><path class="trait" d="M-6 0c3-3 3 3 6 0"/>
+    </g>
+    <g transform="translate(219 80) rotate(14)">
+      <ellipse class="trait" rx="8" ry="5.5"/><path class="trait" d="M-6 0c3-3 3 3 6 0"/>
+    </g>
+    <g transform="translate(189 88) rotate(-40)">
+      <ellipse class="trait" rx="7" ry="5"/><path class="trait" d="M-5 0c2.5-2.5 2.5 2.5 5 0"/>
+    </g>
+    <circle class="trait" cx="234" cy="42" r="1.8"/>
+    <circle class="trait" cx="242" cy="60" r="1.8"/>
+    <circle class="trait" cx="228" cy="104" r="1.8"/>
+  </svg>
+
+  <div class="devanture__in">
+    <div class="devanture__ligne">
+      <h1 id="titre-principal" class="lecteur">Alaïa, café &amp; boutique à Nantes</h1>
+      <span class="peindre devanture__marque">
+        <span class="marque marque--script" aria-hidden="true"></span>
+      </span>
+      <p class="peint peint--large devanture__lieu">Nantes — depuis 2020</p>
+    </div>
+
+    <!-- Les trois mots du carreau de droite, à gauche ce qui est peint sur
+         celui de gauche. La vitrine entière tient en trois lignes. -->
+    <div class="mots">
+      <div class="mots__l">
+        <span class="mot"><span class="peindre">Petit déj’</span></span>
+        <span class="mots__fil" aria-hidden="true"></span>
+        <span class="peint">Sur place</span>
+      </div>
+      <div class="mots__l">
+        <span class="mot"><span class="peindre">Midi</span></span>
+        <span class="mots__fil" aria-hidden="true"></span>
+        <span class="peint">Ou à emporter</span>
+      </div>
+      <div class="mots__l">
+        <span class="mot"><span class="peindre">Goûter</span></span>
+        <span class="mots__fil" aria-hidden="true"></span>
+        <span class="peint">Sans réservation</span>
+      </div>
+    </div>
+
+    <div class="devanture__socle">
+      <p class="devanture__dit leve" data-retard="1">
+        Un café de spécialité, une cuisine qui suit la saison, une boutique.
+        Adeline et Florian ont ouvert Alaïa en juillet 2020.
+      </p>
+      <div class="devanture__horaire leve" data-retard="2">
+        <p class="peint">Mardi → Samedi</p>
+        <b>8:30 → 17:30</b>
+      </div>
+    </div>
+  </div>
+
+  <!-- On a peint les mots sur la vitre ; maintenant on entre. La bande montre
+       la salle, pas le reflet du verre — les mentions restent sur le bandeau
+       du dessous, là où l'encre tient sur la peinture. -->
+  <div class="vitre">
+    <img class="vitre__photo buee" data-vitre
+         src="assets/img/salle-bandeau.jpg"
+         width="1500" height="766"
+         alt="La salle d'Alaïa : plantes retombantes accrochées aux vitres, bouquets de fleurs séchées sur les tables de bistrot, chaises en bois clair, banquette vert d'eau et la rue derrière les grandes fenêtres."
+         fetchpriority="high" decoding="async">
+  </div>
+  <div class="rail-bas">
+    <span class="peint">4 rue de Budapest — Nantes</span>
+    <span class="pastille" aria-hidden="true"></span>
+    <span class="peint">Terrasse</span>
+    <span class="pastille" aria-hidden="true"></span>
+    <span class="peint">Chiens bienvenus</span>
+    <span class="pastille" aria-hidden="true"></span>
+    <span class="peint">Sur place ou à emporter</span>
+    <span class="pastille" aria-hidden="true"></span>
+    <span class="peint">Sans réservation</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 01 — LE LIEU ═════════════════════════════ -->
+<section class="bloc" id="lieu" aria-labelledby="t-lieu">
+  <div class="page page--etroit">
+    <div class="rail">
+      <span class="numero peint">N° 01</span>
+      <span class="peint">Le lieu</span>
+      <span class="peint rail__titre">4 rue de Budapest</span>
+    </div>
+
+    <div class="lieu">
+      <div class="lieu__dire">
+        <h2 class="titre leve" id="t-lieu">Depuis 2020, on n’a jamais pris <em>une seule réservation.</em></h2>
+        <div class="texte leve" data-retard="1">
+          <p>
+            Adeline et Florian ont ouvert Alaïa en juillet 2020, au centre de Nantes.
+            Le principe n’a pas bougé : on ne réserve pas. S’il y a de la place, elle
+            est pour vous. Sinon, la salle se vide en début d’après-midi et le goûter
+            commence.
+          </p>
+          <p>
+            La pièce tient en peu de choses : des murs clairs, des guirlandes, des
+            plantes suspendues dans des paniers, des cadres qui changent au gré des
+            artistes accrochés. On y travaille au calme le matin, on y déjeune vite
+            le midi, on y traîne l’après-midi.
+          </p>
+          <p>
+            Les chiens dorment sous les tables. Ce n’est écrit nulle part, mais tout
+            le monde le sait.
+          </p>
+        </div>
+
+        <div class="lieu__notes leve" data-retard="2">
+          <div class="lieu__note">
+            <b>Sans réservation</b>
+            <span>C’est peint sur la vitre depuis le premier jour.</span>
+          </div>
+          <div class="lieu__note">
+            <b>Sur place ou à emporter</b>
+            <span>Quelques tables en terrasse, rue de Budapest.</span>
+          </div>
+          <div class="lieu__note">
+            <b>Chiens bienvenus</b>
+            <span>Ils entrent avec vous, et ils restent.</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <figure style="margin:0">
+          <img class="buee" src="assets/img/devanture-comptoir.jpg" width="800" height="601"
+               alt="La porte d'Alaïa grande ouverte sur le comptoir en bois : derrière, les silos de café en vrac et le tableau noir ; à gauche, les étagères de la boutique derrière la vitre peinte."
+               loading="lazy" decoding="async">
+          <figcaption class="lieu__legende">
+            <span class="peint">Fig. 01</span>
+            <span>La porte, ouverte. Il n’y a rien d’autre à faire.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="lieu__chien" style="margin:26px 0 0">
+          <img class="buee" src="assets/img/detail-chien.jpg" width="460" height="285"
+               alt="À l'intérieur du café : un chien debout près d'une table basse en bois, une tasse de cappuccino posée dessus, une cliente assise derrière."
+               loading="lazy" decoding="async">
+          <figcaption class="lieu__legende" style="max-width:460px">
+            <span class="peint">Fig. 02</span>
+            <span>Une place sous la table, occupée.</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 02 — LE CAFÉ ═════════════════════════════
+     Le produit héros : la raison pour laquelle on traverse la ville. -->
+<section class="bloc bloc--encre" id="cafe" aria-labelledby="t-cafe">
+  <div class="page page--etroit">
+    <div class="rail">
+      <span class="numero peint">N° 02</span>
+      <span class="peint">Le café</span>
+      <span class="peint rail__titre">Torréfaction — Horizon</span>
+    </div>
+
+    <h2 class="titre leve" id="t-cafe">Trois origines, trois continents, <em>trois profils.</em></h2>
+
+    <div class="origines leve" data-retard="1">
+      <div class="origine">
+        <span class="origine__n">01</span>
+        <h3 class="origine__t">Trois origines</h3>
+        <p>Trois cafés à la carte en permanence, choisis sur trois continents.</p>
+      </div>
+      <div class="origine">
+        <span class="origine__n">02</span>
+        <h3 class="origine__t">Trois profils</h3>
+        <p>Du plus doux au plus franc. La sélection tourne avec la saison — jamais la même toute l’année.</p>
+      </div>
+      <div class="origine">
+        <span class="origine__n">03</span>
+        <h3 class="origine__t">Quatre façons</h3>
+        <p>Filtre, V60, espresso, cappuccino. Et du thé bio pour ceux que la caféine fatigue.</p>
+      </div>
+    </div>
+
+    <div class="cafe__bas">
+      <div class="texte leve">
+        <p>
+          Les grains ne restent pas derrière le comptoir : ils sont vendus en vrac.
+          Vous repartez avec ce que vous venez de boire.
+        </p>
+        <p>
+          Le chaï est une recette maison, retravaillée jusqu’à tomber juste. Les jus
+          sont pressés ici, en partie avec les fruits du verger de la famille.
+        </p>
+        <p class="main" style="margin-top:.6em">Toujours plus de caféine.</p>
+      </div>
+
+      <div class="leve" data-retard="1">
+        <ul class="liste">
+          <li>
+            <span class="liste__nom">Chaï latte <span class="peint">recette maison</span></span>
+            <span class="liste__conduite" aria-hidden="true"></span>
+            <span class="liste__prix">4,50 €</span>
+          </li>
+          <li>
+            <span class="liste__nom">Matcha, gold, black, ube latte</span>
+            <span class="liste__conduite" aria-hidden="true"></span>
+            <span class="liste__prix">4 → 4,50 €</span>
+          </li>
+          <li>
+            <span class="liste__nom">Lait végétal</span>
+            <span class="liste__conduite" aria-hidden="true"></span>
+            <span class="liste__prix">+ 0,50 €</span>
+          </li>
+          <li>
+            <span class="liste__nom">Jus pressé du jour</span>
+            <span class="liste__conduite" aria-hidden="true"></span>
+            <span class="liste__prix">4 €</span>
+          </li>
+          <li>
+            <span class="liste__nom">Grains en vrac</span>
+            <span class="liste__conduite" aria-hidden="true"></span>
+            <span class="liste__prix">au comptoir</span>
+          </li>
+        </ul>
+        <p class="peint" style="margin-top:16px;opacity:.7">Prix relevés en juillet 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- La suite du comptoir. Bord à bord, sans légende : on longe le geste. -->
+  <div class="comptoir">
+    <figure>
+      <img class="buee" src="assets/img/cafe-porte-filtre.jpg" width="900" height="1482"
+           alt="Une main tient un porte-filtre rempli de café fraîchement moulu, tassé et lissé."
+           loading="lazy" decoding="async">
+    </figure>
+    <figure>
+      <img class="buee" src="assets/img/cafe-extraction.jpg" width="900" height="1482"
+           alt="L'espresso coule de la machine La Marzocco en deux filets, dans une tasse en céramique vert d'eau."
+           loading="lazy" decoding="async">
+    </figure>
+    <figure>
+      <img class="buee" src="assets/img/cafe-latte.jpg" width="900" height="1482"
+           alt="Un barista verse le lait dans une tasse vert d'eau et y dessine une rosetta."
+           loading="lazy" decoding="async">
+    </figure>
+    <figure>
+      <img class="buee" src="assets/img/cafe-deux-tasses.jpg" width="900" height="1482"
+           alt="Deux tasses d'espresso vues du dessus sur le comptoir en métal, l'une sur une soucoupe vert d'eau, l'autre sur une soucoupe brune."
+           loading="lazy" decoding="async">
+    </figure>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 03 — À TABLE ═════════════════════════════ -->
+<section class="bloc bloc--verre" id="table" aria-labelledby="t-table">
+  <div class="page page--etroit">
+    <div class="rail">
+      <span class="numero peint">N° 03</span>
+      <span class="peint">À table</span>
+      <span class="peint rail__titre">Cuisine de saison</span>
+    </div>
+
+    <div class="table">
+      <div>
+        <h2 class="titre leve" id="t-table">Une carte courte, <em>réécrite avec la saison.</em></h2>
+        <div class="texte leve" data-retard="1" style="margin-top:22px">
+          <p>
+            Tout est fait ici, en petites quantités. Ce qui n’est plus de saison sort
+            de la carte, ce qui arrive y entre. C’est pour ça qu’elle est courte.
+          </p>
+        </div>
+        <p class="leve" data-retard="2" style="margin-top:26px">
+          <a class="carreau carreau--encre" href="carte.html">
+            Voir la carte
+            <svg class="fleche" width="13" height="9" viewBox="0 0 13 9" fill="none" aria-hidden="true">
+              <path d="M0 4.5h11M7.5 1 11 4.5 7.5 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </p>
+      </div>
+
+      <div class="moments leve" data-retard="1">
+        <article class="moment">
+          <span class="moment__h peint">Matin</span>
+          <div>
+            <h3 class="moment__t">Le petit déj’</h3>
+            <p>Un filtre, les pâtisseries sorties du four, et la salle encore calme.</p>
+          </div>
+        </article>
+        <article class="moment">
+          <span class="moment__h peint">Midi</span>
+          <div>
+            <h3 class="moment__t">Le déjeuner</h3>
+            <p>Trois propositions : un toastie, un plat, une assiette végétarienne. Puis un dessert maison.</p>
+          </div>
+        </article>
+        <article class="moment">
+          <span class="moment__h peint">Samedi</span>
+          <div>
+            <h3 class="moment__t">Le brunch</h3>
+            <p>Fried eggs on toast et scones salés jusqu’à 11h. Ensuite, les petits plats jusqu’à 14h.</p>
+          </div>
+        </article>
+        <article class="moment">
+          <span class="moment__h peint">Après-midi</span>
+          <div>
+            <h3 class="moment__t">Le goûter</h3>
+            <p>Carrot cake, babka au chocolat, brownie cacahuète, cookies, et le gâteau de la semaine.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Les assiettes. Les légendes décrivent ce qu'on voit, sans nommer un
+         plat de la carte : la carte change, et rien n'est inventé ici. -->
+    <div class="assiettes">
+      <figure>
+        <img class="buee" src="assets/img/midi-toastie.jpg" width="900" height="1482"
+             alt="Un toastie grillé coupé en deux, un œuf au plat poivré et une salade de mâche, sur une assiette ocre posée sur le passe en inox."
+             loading="lazy" decoding="async">
+        <figcaption><span class="peint">Fig. 03</span><span>Le toastie, l’œuf, la mâche.</span></figcaption>
+      </figure>
+      <figure>
+        <img class="buee" src="assets/img/midi-radis.jpg" width="900" height="1482"
+             alt="Un bol sombre : lamelles de radis rose, herbes fraîches, graines et bouillon clair."
+             loading="lazy" decoding="async">
+        <figcaption><span class="peint">Fig. 04</span><span>Radis, herbes, bouillon.</span></figcaption>
+      </figure>
+      <figure>
+        <img class="buee" src="assets/img/midi-poisson.jpg" width="900" height="1482"
+             alt="Un filet de poisson blanc, des carottes rôties et une sauce jaune, sur une assiette mouchetée ; à côté, le ticket de cuisine."
+             loading="lazy" decoding="async">
+        <figcaption><span class="peint">Fig. 05</span><span>Le plat du jour, au passe.</span></figcaption>
+      </figure>
+      <figure>
+        <img class="buee" src="assets/img/midi-vert.jpg" width="900" height="1482"
+             alt="Une assiette végétarienne : quenelles vertes, champignons, pousses et fleurs de capucine sur une crème claire."
+             loading="lazy" decoding="async">
+        <figcaption><span class="peint">Fig. 06</span><span>L’assiette végétarienne.</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 04 — LA BOUTIQUE ═════════════════════════ -->
+<section class="bloc" id="boutique" aria-labelledby="t-boutique">
+  <div class="page page--etroit">
+    <div class="rail">
+      <span class="numero peint">N° 04</span>
+      <span class="peint">La boutique</span>
+      <span class="peint rail__titre">Le second mot de l’enseigne</span>
+    </div>
+
+    <div class="boutique">
+      <div>
+        <h2 class="titre leve" id="t-boutique">Ce qui est bon <em>se rapporte.</em></h2>
+        <div class="texte leve" data-retard="1" style="margin-top:22px">
+          <p>
+            Le comptoir n’est pas qu’un comptoir. Les grains en vrac, les objets
+            d’artisans, les pièces d’artistes accrochées aux murs — et qui tournent,
+            parce que les murs se vident quand quelqu’un achète.
+          </p>
+          <p>
+            Un coin zéro déchet, aussi : des gourdes qui se remplissent plutôt que
+            des bouteilles qui se jettent.
+          </p>
+          <p>
+            Il n’y a pas de catalogue en ligne. Ce qui est là est là, et ça change.
+          </p>
+        </div>
+        <div class="lieu__notes leve" data-retard="2">
+          <div class="lieu__note">
+            <b>Le café en vrac</b>
+            <span>Les trois origines du moment, pesées au comptoir.</span>
+          </div>
+          <div class="lieu__note">
+            <b>Les artisans</b>
+            <span>Des objets choisis chez d’autres maisons, la plupart d’ici.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emplacement photo : aucune des photos fournies ne montre la boutique
+           elle-même. On nomme ce qui manque plutôt que d'y mettre une image
+           qui parle d'autre chose. Voir README.md § « Photos à produire ». -->
+      <div class="boutique__photo">
+        <div class="attente" style="min-height:clamp(300px,40vw,460px)">
+          <span class="peint">Photo à fournir</span>
+          <span>Le mur de la boutique : les objets d’artisans, les sacs de grains, les cadres accrochés. Format portrait.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 05 — HORIZON ═════════════════════════════ -->
+<section class="bloc bloc--encre" id="horizon" aria-labelledby="t-horizon">
+  <div class="page page--etroit">
+    <div class="rail">
+      <span class="numero peint">N° 05</span>
+      <span class="peint">Horizon</span>
+      <span class="peint rail__titre">38 rue Léon Jamin</span>
+    </div>
+
+    <div class="horizon">
+      <div>
+        <h2 class="titre leve" id="t-horizon">La <em>deuxième maison.</em></h2>
+        <div class="texte leve" data-retard="1" style="margin-top:22px">
+          <p>
+            En septembre 2023, Adeline et Florian ont ouvert Horizon, rue Léon Jamin,
+            dans une ancienne galerie d’art. Coffee shop d’un côté, cave à café de
+            l’autre.
+          </p>
+          <p>
+            On y trouve des grains rares — Amérique latine, Afrique, Asie — torréfiés
+            en France et en Europe, du plus doux au plus franc. C’est le prolongement
+            du comptoir d’Alaïa, en plus grand.
+          </p>
+        </div>
+      </div>
+
+      <div class="horizon__carte leve" data-retard="2">
+        <dl>
+          <dt class="peint">Adresse</dt>
+          <dd>38 rue Léon Jamin, 44000 Nantes</dd>
+          <dt class="peint">Depuis</dt>
+          <dd>Septembre 2023</dd>
+          <dt class="peint">C’est</dt>
+          <dd>Coffee shop et cave à café</dd>
+          <dt class="peint">Suivre</dt>
+          <dd>
+            <a href="https://www.instagram.com/horizoncafe.nantes/" target="_blank" rel="noopener noreferrer">
+              @horizoncafe.nantes
+            </a>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 06 — LES GENS ════════════════════════════ -->
+<section class="bloc bloc--verre" aria-labelledby="t-gens">
+  <div class="page page--etroit">
+    <div class="rail">
+      <span class="numero peint">N° 06</span>
+      <span class="peint">À qui on achète</span>
+    </div>
+
+    <h2 class="titre leve" id="t-gens" style="max-width:24ch;margin-bottom:clamp(24px,3vw,40px)">
+      La carte est courte parce que <em>la liste est longue.</em>
+    </h2>
+
+    <ul class="gens leve" data-retard="1">
+      <li><span class="gens__nom">Ferme du Bois des Anses</span></li>
+      <li><span class="gens__nom">Bio Divatte</span></li>
+      <li><span class="gens__nom">Ferme des Grands Sables</span></li>
+      <li><span class="gens__nom">Alice Ménard</span></li>
+      <li><span class="gens__nom">Au P’tit Pain Nantais</span></li>
+      <li><span class="gens__nom">Choc Hola</span></li>
+    </ul>
+    <p class="peint leve" data-retard="2" style="margin-top:22px;opacity:.75">
+      Producteurs et artisans cités par la maison — le pain, le chocolat, les légumes, les fruits.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 07 — NOUS TROUVER ════════════════════════ -->
+<section class="bloc" id="trouver" aria-labelledby="t-trouver">
+  <div class="page page--etroit">
+    <div class="rail">
+      <span class="numero peint">N° 07</span>
+      <span class="peint">Nous trouver</span>
+      <span class="peint rail__titre">Aucune réservation à prendre</span>
+    </div>
+
+    <div class="trouver">
+      <div>
+        <h2 class="lecteur" id="t-trouver">Nous trouver</h2>
+        <p class="trouver__adresse leve">4 rue de Budapest,<br>44000 Nantes.</p>
+
+        <dl class="trouver__faits leve" data-retard="1">
+          <div class="fait"><dt class="peint">Jours</dt><dd>Mardi → Samedi</dd></div>
+          <div class="fait"><dt class="peint">Horaires</dt><dd>8:30 → 17:30</dd></div>
+          <div class="fait"><dt class="peint">Réservation</dt><dd>Aucune. On pousse la porte.</dd></div>
+          <div class="fait"><dt class="peint">Service</dt><dd>Sur place ou à emporter</dd></div>
+          <div class="fait"><dt class="peint">Terrasse</dt><dd>Quelques tables sur le trottoir</dd></div>
+          <div class="fait"><dt class="peint">Chiens</dt><dd>Bienvenus</dd></div>
+          <div class="fait"><dt class="peint">Téléphone</dt><dd>[INFORMATION À FOURNIR PAR LE CLIENT]</dd></div>
+          <div class="fait"><dt class="peint">E-mail</dt><dd>[INFORMATION À FOURNIR PAR LE CLIENT]</dd></div>
+        </dl>
+
+        <div class="trouver__actions leve" data-retard="2">
+          <a class="carreau carreau--encre"
+             href="https://www.google.com/maps/dir/?api=1&destination=4+rue+de+Budapest+44000+Nantes"
+             target="_blank" rel="noopener noreferrer">
+            Itinéraire
+            <svg class="fleche" width="13" height="9" viewBox="0 0 13 9" fill="none" aria-hidden="true">
+              <path d="M0 4.5h11M7.5 1 11 4.5 7.5 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a class="carreau carreau--encre" href="https://www.instagram.com/alaiacafeboutique/" target="_blank" rel="noopener noreferrer">
+            Instagram
+          </a>
+        </div>
+      </div>
+
+      <div class="leve" data-retard="1">
+        <figure style="margin:0">
+          <img class="buee" src="assets/img/facade.jpg" width="1400" height="1550"
+               alt="La devanture vert d'eau d'Alaïa, 4 rue de Budapest à Nantes : l'enseigne peinte à la main, les grandes vitres et la salle éclairée à l'intérieur."
+               loading="lazy" decoding="async">
+          <figcaption class="lieu__legende">
+            <span class="peint">Fig. 08</span>
+            <span>L’enseigne, peinte à la main sur le bandeau.</span>
+          </figcaption>
+        </figure>
+
+        <figure style="margin:26px 0 0">
+          <img class="buee" src="assets/img/terrasse.jpg" width="678" height="452"
+               alt="La terrasse d'Alaïa : des tables rondes et des chaises en résine tressée alignées sur le trottoir, devant la devanture vert d'eau."
+               loading="lazy" decoding="async">
+          <figcaption class="lieu__legende">
+            <span class="peint">Fig. 09</span>
+            <span>La terrasse, sur le trottoir.</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════ LE PIED ══════════════════════════════════
+     La dernière section est peinte comme la première : c'est le rideau. -->
+<footer class="pied">
+  <svg class="pied__grains dessin" viewBox="0 0 150 90" fill="none" aria-hidden="true">
+    <g transform="translate(24 22) rotate(-16)"><ellipse class="trait" rx="9" ry="6"/><path class="trait" d="M-7 0c3.5-3.5 3.5 3.5 7 0"/></g>
+    <g transform="translate(66 44) rotate(22)"><ellipse class="trait" rx="9" ry="6"/><path class="trait" d="M-7 0c3.5-3.5 3.5 3.5 7 0"/></g>
+    <g transform="translate(112 20) rotate(-34)"><ellipse class="trait" rx="9" ry="6"/><path class="trait" d="M-7 0c3.5-3.5 3.5 3.5 7 0"/></g>
+    <g transform="translate(38 72) rotate(40)"><ellipse class="trait" rx="8" ry="5.5"/><path class="trait" d="M-6 0c3-3 3 3 6 0"/></g>
+    <g transform="translate(122 68) rotate(8)"><ellipse class="trait" rx="8" ry="5.5"/><path class="trait" d="M-6 0c3-3 3 3 6 0"/></g>
+    <circle class="trait" cx="90" cy="76" r="1.8"/>
+    <circle class="trait" cx="146" cy="46" r="1.8"/>
+  </svg>
+
+  <div class="page page--etroit">
+    <p class="pied__mot rideau"><span>Pas de réservation.<br><em>Juste la porte.</em></span></p>
+
+    <div class="pied__grille">
+      <div class="pied__col pied__marque">
+        <span class="marque marque--script" aria-hidden="true"></span>
+        <p>Café de spécialité, cuisine de saison et boutique.<br>4 rue de Budapest, 44000 Nantes.</p>
+        <p class="peint" style="margin-top:14px">Mardi → Samedi · 8:30 → 17:30</p>
+      </div>
+
+      <div class="pied__col">
+        <h3 class="peint">La maison</h3>
+        <ul>
+          <li><a href="#lieu">Le lieu</a></li>
+          <li><a href="#cafe">Le café</a></li>
+          <li><a href="#table">À table</a></li>
+          <li><a href="#boutique">La boutique</a></li>
+          <li><a href="carte.html">La carte</a></li>
+        </ul>
+      </div>
+
+      <div class="pied__col">
+        <h3 class="peint">Horizon</h3>
+        <ul>
+          <li>38 rue Léon Jamin, Nantes</li>
+          <li>Coffee shop &amp; cave à café</li>
+          <li><a href="https://www.instagram.com/horizoncafe.nantes/" target="_blank" rel="noopener noreferrer">@horizoncafe.nantes</a></li>
+        </ul>
+      </div>
+
+      <div class="pied__col">
+        <h3 class="peint">Suivre &amp; écrire</h3>
+        <ul>
+          <li><a href="https://www.instagram.com/alaiacafeboutique/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          <li><a href="https://www.facebook.com/alaiacafeboutique/" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+          <li><a href="https://www.threads.net/@alaiacafeboutique" target="_blank" rel="noopener noreferrer">Threads</a></li>
+          <li style="margin-top:8px">On recrute — [E-MAIL À FOURNIR]</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pied__bas">
+      <nav class="pied__legal peint" aria-label="Liens légaux">
+        <span>© 2026 Alaïa café &amp; boutique</span>
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="confidentialite.html">Confidentialité</a>
+      </nav>
+
+      <p class="vokum peint">
+        Création
+        <a href="https://vokumagency.com" target="_blank" rel="noopener noreferrer"
+           aria-label="Visiter le site de l’agence Vokum">Vokum</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

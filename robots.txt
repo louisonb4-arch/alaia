@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /404.html
+
+# À compléter dès que le domaine est connu (voir LEGAL-TODO.md) :
+# Sitemap: https://exemple.fr/sitemap.xml

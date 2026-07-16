@@ -1,0 +1,879 @@
+/* =========================================================================
+   ALAÏA CAFÉ & BOUTIQUE — Nantes
+   DA « La vitrine peinte »
+   La devanture d'Alaïa dit déjà tout : un bandeau vert d'eau, un mot tracé
+   d'un seul trait, des feuilles et des grains dessinés à la main, et des
+   capitales blanches peintes sur le verre. Le site n'invente pas une
+   grammaire : il reprend celle-là et la met à l'échelle.
+
+   1. Jetons
+   2. Polices
+   3. Socle
+   4. Voix typographiques
+   5. Le trait (dessins, filets)
+   6. Navigation
+   7. Hero — la devanture
+   8. Sections
+   9. Pied de page
+   10. Pages secondaires
+   11. Mouvement
+   12. Responsive
+   ========================================================================= */
+
+/* ============================== 1. JETONS ============================== */
+:root {
+  /* Peinture relevée au pixel sur la devanture du 4 rue de Budapest */
+  --verre:        #AFD3C5; /* le vert d'eau du bandeau */
+  --verre-mid:    #C6E0D5;
+  --verre-clair:  #DCEDE5;
+  --verre-pale:   #EDF5F1;
+  --enseigne:     #457475; /* l'encre du mot « alaïa » sur l'enseigne */
+  --encre:        #16302E; /* texte courant — assombri pour le contraste */
+  --encre-doux:   #3E5B58;
+  --lait:         #F7F9F8; /* blanc froid : jamais de beige, jamais de kraft */
+  --blanc:        #FFFFFF;
+  --grain:        #7C4A2E; /* le brun du grain de café — accent, à la goutte */
+
+  --trait: 1.5px;
+
+  --pas: clamp(64px, 8vw, 132px);   /* respiration verticale des sections */
+  --marge: clamp(20px, 5vw, 76px);  /* marge de page */
+
+  --ease: cubic-bezier(.22, .61, .36, 1);
+  --ease-long: cubic-bezier(.16, 1, .3, 1);
+
+  --nav-h: 74px;
+}
+
+/* ============================= 2. POLICES ============================== */
+/* Bricolage Grotesque : variable en largeur — le lettrage peint s'étire pour
+   remplir son carreau, exactement comme un peintre en lettres le ferait. */
+@font-face {
+  font-family: 'Bricolage';
+  src: url('../fonts/bricolage-var.woff2') format('woff2-variations');
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+  font-style: normal;
+}
+/* Supreme : la voix courante et les capitales peintes du pratique. */
+@font-face { font-family:'Supreme'; src:url('../fonts/supreme-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('../fonts/supreme-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+@font-face { font-family:'Supreme'; src:url('../fonts/supreme-700.woff2') format('woff2'); font-weight:700; font-display:swap; }
+/* Sacramento : la même main que le logo. Trois mots par page, pas plus. */
+@font-face { font-family:'Sacramento'; src:url('../fonts/sacramento.woff2') format('woff2'); font-weight:400; font-display:swap; }
+
+/* ============================== 3. SOCLE =============================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+html:focus-within { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--lait);
+  color: var(--encre);
+  font-family: 'Supreme', system-ui, -apple-system, sans-serif;
+  font-size: clamp(16px, 1.02vw, 18px);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* `height: auto` est obligatoire : sans lui, l'attribut height="…" du HTML reste
+   la hauteur utilisée pendant que max-width rétrécit la largeur — et l'image
+   s'allonge. Les attributs width/height restent en place (ils réservent la place
+   au chargement et évitent le décalage de mise en page). */
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+
+::selection { background: var(--verre); color: var(--encre); }
+
+/* Un seul style de focus sur tout le site : le trait de l'enseigne. */
+:focus-visible {
+  outline: 2px solid var(--enseigne);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+.sur-verre :focus-visible { outline-color: var(--blanc); }
+
+.saut {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--encre); color: var(--lait);
+  padding: 14px 20px; z-index: 200; text-decoration: none;
+}
+.saut:focus { left: 8px; top: 8px; }
+
+.lecteur {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+.page { width: 100%; padding-inline: var(--marge); }
+.page--etroit { max-width: 1180px; margin-inline: auto; }
+
+/* ====================== 4. VOIX TYPOGRAPHIQUES ========================= */
+
+/* Le lettrage peint : ce qui est pratique est en capitales espacées,
+   comme sur la vitre. Aucune police à chasse fixe sur ce site. */
+.peint {
+  font-family: 'Supreme', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .26em;
+  font-size: clamp(10px, .72vw, 12px);
+  line-height: 1.9;
+}
+.peint--large { letter-spacing: .34em; }
+.sur-verre .peint { color: var(--blanc); text-shadow: 0 1px 14px rgba(10, 30, 28, .55); }
+
+/* Le display : lettres peintes, étirées pour remplir leur carreau. */
+.mot {
+  font-family: 'Bricolage', system-ui, sans-serif;
+  font-weight: 600;
+  line-height: .86;
+  letter-spacing: -.02em;
+  margin: 0;
+  /* Les descendantes des titres révélés ne doivent pas être coupées. */
+  padding-bottom: .06em;
+}
+
+.titre {
+  font-family: 'Bricolage', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: clamp(30px, 3.5vw, 54px);
+  line-height: 1.04;
+  letter-spacing: -.022em;
+  margin: 0;
+  max-width: 19ch;
+  padding-bottom: .04em;
+}
+.titre em { font-style: normal; color: var(--enseigne); }
+
+/* La main du logo. Parcimonie absolue. */
+.main {
+  font-family: 'Sacramento', cursive;
+  font-weight: 400;
+  font-size: clamp(26px, 2.3vw, 38px);
+  line-height: 1;
+  color: var(--enseigne);
+}
+
+.plomb { font-size: clamp(17px, 1.22vw, 21px); line-height: 1.58; max-width: 46ch; }
+.texte { max-width: 58ch; }
+.texte p { margin: 0 0 1.05em; }
+.texte p:last-child { margin-bottom: 0; }
+
+/* Un mot souligné d'un trait droit — le trait de l'enseigne, jamais ondulé. */
+.souligne {
+  background-image: linear-gradient(var(--enseigne), var(--enseigne));
+  background-size: 100% var(--trait);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  padding-bottom: 2px;
+}
+
+/* Numéro de section : discret, sur le rail. */
+.numero { font-variant-numeric: tabular-nums; color: var(--enseigne); }
+
+/* ====================== 5. LE TRAIT (dessins) ========================== */
+/* Feuilles et grains sont ceux peints sur la devanture. Toujours au trait,
+   jamais remplis, jamais une icône de bibliothèque. */
+.trait {
+  fill: none;
+  stroke: var(--enseigne);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sur-verre .trait { stroke: var(--blanc); }
+.dessin { display: block; overflow: visible; }
+
+/* Le rail : le filet sous l'enseigne, repris en tête de chaque section. */
+.rail {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 2vw, 32px);
+  border-top: var(--trait) solid var(--enseigne);
+  padding-top: 14px;
+  margin-bottom: clamp(30px, 3.4vw, 54px);
+}
+.rail__titre { margin-left: auto; }
+
+/* Le wordmark : masque, donc il prend la couleur qu'on lui donne. */
+.marque {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-size: contain;     mask-size: contain;
+  -webkit-mask-position: center;  mask-position: center;
+}
+.marque--script   { -webkit-mask-image: url('../img/logo-script.png');   mask-image: url('../img/logo-script.png');   aspect-ratio: 1200 / 354; }
+.marque--baseline { -webkit-mask-image: url('../img/logo-baseline.png'); mask-image: url('../img/logo-baseline.png'); aspect-ratio: 1200 / 78; }
+.marque--bloc     { -webkit-mask-image: url('../img/logo-alaia.png');    mask-image: url('../img/logo-alaia.png');    aspect-ratio: 800 / 288; }
+
+/* Les meneaux : les montants verts qui découpent la vitrine en carreaux
+   inégaux. Ils remplacent la grille de cartes — ici, rien n'est égal. */
+.meneau { background: var(--verre); }
+
+/* ============================ 6. NAVIGATION ============================ */
+.enseigne {
+  position: sticky; top: 0; z-index: 90;
+  background: var(--verre);
+  border-bottom: var(--trait) solid var(--enseigne);
+  color: var(--enseigne);
+}
+.enseigne__in {
+  min-height: var(--nav-h);
+  display: flex; align-items: center; gap: 28px;
+  padding-inline: var(--marge);
+}
+.enseigne__marque { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--enseigne); }
+.enseigne__marque .marque--script { width: 96px; flex-shrink: 0; }
+/* La mention de l'enseigne est composée, pas mise en image : à 9 px, le
+   masque du logo devient une bouillie — le texte, lui, reste net. */
+.enseigne__mention {
+  padding-left: 14px;
+  border-left: var(--trait) solid rgba(69, 116, 117, .4);
+  opacity: .9;
+}
+
+.enseigne__nav { margin-left: auto; display: flex; align-items: center; gap: clamp(14px, 1.6vw, 30px); }
+.enseigne__lien {
+  text-decoration: none; color: var(--enseigne);
+  position: relative; padding: 6px 0;
+}
+.enseigne__lien::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+  height: var(--trait); background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .42s var(--ease);
+}
+.enseigne__lien:hover::after,
+.enseigne__lien:focus-visible::after,
+.enseigne__lien[aria-current="page"]::after { transform: scaleX(1); }
+
+/* Le bouton : un carreau, pas une pilule. */
+.carreau {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 11px 20px;
+  border: var(--trait) solid var(--enseigne);
+  background: transparent; color: var(--enseigne);
+  text-decoration: none; cursor: pointer;
+  font-family: 'Supreme', sans-serif; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .2em; font-size: 11px;
+  transition: background-color .38s var(--ease), color .38s var(--ease);
+}
+.carreau .fleche { transition: transform .38s var(--ease); }
+.carreau:hover, .carreau:focus-visible { background: var(--enseigne); color: var(--verre); }
+.carreau:hover .fleche { transform: translateX(4px); }
+.carreau--encre { border-color: var(--encre); color: var(--encre); }
+.carreau--encre:hover, .carreau--encre:focus-visible { background: var(--encre); color: var(--lait); }
+.carreau--blanc { border-color: var(--blanc); color: var(--blanc); }
+.carreau--blanc:hover, .carreau--blanc:focus-visible { background: var(--blanc); color: var(--encre); }
+
+/* Menu mobile : la vitre se remplit de peinture. */
+.cle { display: none; background: none; border: 0; padding: 8px; cursor: pointer; color: var(--enseigne); margin-left: auto; }
+.cle__trait { display: block; width: 26px; height: var(--trait); background: currentColor; transition: transform .4s var(--ease), opacity .3s; }
+.cle__trait + .cle__trait { margin-top: 7px; }
+/* Les barres sont les enfants 2, 3 et 4 : le premier enfant du bouton est le
+   libellé pour lecteur d'écran. Compter à partir de 1 donnait un « / ». */
+.cle[aria-expanded="true"] .cle__trait:nth-child(2) { transform: translateY(8.5px) rotate(45deg); }
+.cle[aria-expanded="true"] .cle__trait:nth-child(3) { opacity: 0; }
+.cle[aria-expanded="true"] .cle__trait:nth-child(4) { transform: translateY(-8.5px) rotate(-45deg); }
+
+.tiroir {
+  position: fixed; inset: 0; z-index: 89;
+  background: var(--verre);
+  padding: calc(var(--nav-h) + 34px) var(--marge) 34px;
+  display: flex; flex-direction: column;
+  transform: translateY(-100%);
+  transition: transform .58s var(--ease-long);
+  overflow-y: auto;
+  visibility: hidden;
+}
+.tiroir[data-ouvert="true"] { transform: translateY(0); visibility: visible; }
+.tiroir__lien {
+  font-family: 'Bricolage', sans-serif; font-weight: 600;
+  font-size: clamp(30px, 8.4vw, 46px); line-height: 1.16;
+  color: var(--enseigne); text-decoration: none;
+  border-bottom: var(--trait) solid rgba(69, 116, 117, .3);
+  padding: 11px 0;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+}
+.tiroir__lien .numero { font-size: 11px; letter-spacing: .2em; }
+.tiroir__pied { margin-top: auto; padding-top: 30px; color: var(--enseigne); }
+
+/* ======================= 7. HERO — LA DEVANTURE ======================== */
+.devanture { background: var(--verre); color: var(--enseigne); position: relative; }
+
+/* Les feuilles et les grains peints, à gauche du mot — comme sur le bandeau. */
+.devanture__jardin {
+  position: absolute; top: clamp(18px, 3vw, 44px); left: var(--marge);
+  width: clamp(150px, 17vw, 250px); height: auto;
+  pointer-events: none; opacity: .9;
+}
+
+.devanture__in { padding: clamp(30px, 3.6vw, 54px) var(--marge) 0; }
+
+.devanture__ligne {
+  display: flex; align-items: flex-end; justify-content: flex-end;
+  gap: clamp(14px, 2vw, 26px);
+  padding-bottom: clamp(18px, 2vw, 30px);
+}
+.devanture__ligne .marque--script { width: clamp(190px, 27vw, 400px); }
+.devanture__lieu { padding-bottom: 6px; }
+
+/* Les trois mots peints sur la vitre — ceux du carreau de droite, à l'échelle.
+   La largeur variable de Bricolage les fait remplir leur carreau. */
+.mots { border-top: var(--trait) solid var(--enseigne); }
+.mots__l {
+  display: flex; align-items: baseline; gap: clamp(12px, 1.6vw, 26px);
+  border-bottom: var(--trait) solid var(--enseigne);
+  padding: clamp(4px, .7vw, 10px) 0;
+}
+.mots__l .mot {
+  font-size: clamp(52px, 11vw, 164px);
+  font-variation-settings: 'wdth' 100, 'opsz' 96;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+/* Le fil du peintre : la ligne de guide qui court du mot à sa mention.
+   C'est elle qui tient la ligne — sans elle, il ne reste qu'un vide. */
+.mots__fil {
+  flex: 1 1 auto;
+  height: 0;
+  border-bottom: var(--trait) solid var(--enseigne);
+  opacity: .42;
+  transform: translateY(-.42em);
+  min-width: 30px;
+}
+.mots__l .peint { flex-shrink: 0; padding-bottom: .42em; opacity: .82; }
+.mots__l:nth-child(1) .mot { font-weight: 700; }
+.mots__l:nth-child(2) .mot { font-weight: 500; }
+.mots__l:nth-child(3) .mot { font-weight: 800; }
+
+.devanture__socle {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: clamp(20px, 3vw, 60px);
+  padding: clamp(18px, 2vw, 28px) 0 clamp(20px, 2.2vw, 30px);
+}
+.devanture__dit { max-width: 34ch; font-size: clamp(16px, 1.06vw, 19px); }
+.devanture__horaire { margin-left: auto; text-align: right; }
+.devanture__horaire b {
+  display: block;
+  font-family: 'Bricolage', sans-serif; font-weight: 600;
+  font-size: clamp(22px, 2vw, 32px); letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* La vitre : la photo pleine largeur. Les meneaux sont ceux de la vitrine
+   elle-même — on ne redessine pas par-dessus ce qui est déjà là. */
+.vitre { position: relative; overflow: hidden; background: var(--verre); }
+.vitre__photo { width: 100%; height: clamp(280px, 42vh, 470px); object-fit: cover; object-position: 50% 70%; }
+
+/* Le bandeau du bas : le trottoir. Encre sur peinture — jamais du blanc sur
+   une photo claire, la légèreté ne vaut pas l'illisibilité. */
+.rail-bas {
+  background: var(--verre); color: var(--enseigne);
+  border-top: var(--trait) solid rgba(69, 116, 117, .3);
+  padding: 15px var(--marge) 17px;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 8px clamp(14px, 1.8vw, 26px);
+}
+.rail-bas .pastille { width: 4px; height: 4px; background: var(--enseigne); border-radius: 50%; flex-shrink: 0; }
+
+/* ============================ 8. SECTIONS ============================= */
+.bloc { padding-block: var(--pas); }
+.bloc--verre { background: var(--verre-pale); }
+.bloc--encre { background: var(--encre); color: var(--verre-clair); }
+.bloc--encre .rail { border-color: rgba(175, 211, 197, .45); }
+.bloc--encre .peint, .bloc--encre .numero { color: var(--verre); }
+.bloc--encre .titre em { color: var(--verre); }
+.bloc--encre .trait { stroke: var(--verre); }
+.bloc--encre .main { color: var(--verre); }
+
+/* --- Le lieu : composition en deux colonnes très inégales ------------- */
+.lieu { display: grid; grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr); gap: clamp(30px, 4vw, 76px); align-items: start; }
+.lieu__dire .titre { max-width: 15ch; margin-bottom: clamp(20px, 2vw, 30px); }
+.lieu__notes { display: grid; gap: 22px; margin-top: clamp(26px, 3vw, 40px); }
+.lieu__note { border-top: var(--trait) solid rgba(69, 116, 117, .34); padding-top: 12px; }
+.lieu__note b { display: block; font-weight: 500; }
+.lieu__note span { color: var(--encre-doux); font-size: .93em; }
+
+/* Le chien : une vignette, pas une bannière. La photo source ne porte que
+   460 px de large — on l'affiche à sa taille plutôt que de l'étirer en flou. */
+.lieu__chien { position: relative; }
+.lieu__chien img { width: 100%; max-width: 460px; height: auto; }
+.lieu__legende {
+  display: flex; gap: 10px; align-items: baseline;
+  padding-top: 10px; border-top: var(--trait) solid var(--enseigne); margin-top: 10px;
+  color: var(--encre-doux);
+}
+
+/* --- Le café : le produit héros, en trois carreaux inégaux ------------ */
+.origines { display: grid; grid-template-columns: repeat(3, 1fr); }
+.origine {
+  padding: clamp(22px, 2.4vw, 36px) clamp(18px, 2vw, 30px);
+  border-left: var(--trait) solid rgba(175, 211, 197, .34);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.origine:first-child { border-left: 0; padding-left: 0; }
+.origine__n { font-family: 'Bricolage', sans-serif; font-weight: 300; font-size: clamp(40px, 4.4vw, 66px); line-height: 1; color: var(--verre); opacity: .5; }
+.origine__t { font-family: 'Bricolage', sans-serif; font-weight: 600; font-size: clamp(19px, 1.5vw, 24px); margin: 0; }
+.origine p { margin: 0; color: rgba(220, 237, 229, .82); font-size: .95em; }
+
+.cafe__bas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(28px, 4vw, 70px); margin-top: clamp(36px, 4vw, 64px); align-items: start; }
+/* Les préparations : une liste conduite par un trait, pas des cartes. */
+.liste { list-style: none; margin: 0; padding: 0; }
+.liste li {
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 11px 0;
+  border-bottom: var(--trait) solid rgba(175, 211, 197, .26);
+}
+.liste li:first-child { border-top: var(--trait) solid rgba(175, 211, 197, .26); }
+.liste__nom { font-weight: 500; flex-shrink: 0; }
+.liste__conduite { flex: 1; border-bottom: 1px dotted rgba(175, 211, 197, .5); transform: translateY(-4px); }
+.liste__prix { font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.bloc--verre .liste li,
+.bloc--verre .liste li:first-child { border-color: rgba(69, 116, 117, .24); }
+.bloc--verre .liste__conduite { border-color: rgba(69, 116, 117, .38); }
+
+/* --- La suite du comptoir : bande pleine largeur, carreaux inégaux -----
+   Immersive, bord à bord, sans légende : on longe le comptoir du regard.
+   Les largeurs ne sont jamais égales — c'est la règle des meneaux. */
+.comptoir {
+  display: grid;
+  grid-template-columns: 1.25fr .82fr 1.1fr .93fr; /* aucune colonne identique */
+  gap: 9px;
+  margin-top: clamp(40px, 4.6vw, 76px);
+}
+.comptoir figure { margin: 0; overflow: hidden; }
+.comptoir img { width: 100%; height: clamp(240px, 30vw, 430px); object-fit: cover; }
+/* Chaque carreau est calé à une hauteur différente : une vitrine n'est pas
+   une grille de cartes. */
+.comptoir figure:nth-child(2) { transform: translateY(clamp(12px, 1.6vw, 26px)); }
+.comptoir figure:nth-child(4) { transform: translateY(clamp(6px, .9vw, 15px)); }
+
+/* --- Les assiettes : registre éditorial, décalé, légendé ---------------
+   L'inverse de la bande du comptoir : dans la marge, respirant, commenté. */
+.assiettes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(14px, 1.8vw, 30px);
+  margin-top: clamp(40px, 4.6vw, 72px);
+  align-items: start;
+}
+.assiettes figure { margin: 0; }
+.assiettes img { width: 100%; height: auto; }
+.assiettes figcaption {
+  display: flex; gap: 10px; align-items: baseline;
+  padding-top: 10px; margin-top: 10px;
+  border-top: var(--trait) solid rgba(69, 116, 117, .34);
+  color: var(--encre-doux); font-size: .92em;
+}
+/* Le décalage suit la lecture, il n'est pas décoratif : l'œil descend. */
+.assiettes figure:nth-child(1) { margin-top: clamp(20px, 2.6vw, 44px); }
+.assiettes figure:nth-child(3) { margin-top: clamp(12px, 1.6vw, 28px); }
+
+/* --- À table --------------------------------------------------------- */
+.table { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: clamp(28px, 4vw, 68px); align-items: start; }
+.moments { display: grid; gap: 0; }
+.moment {
+  display: grid; grid-template-columns: auto 1fr; gap: clamp(16px, 2vw, 32px);
+  padding: clamp(18px, 2vw, 26px) 0;
+  border-top: var(--trait) solid rgba(69, 116, 117, .3);
+  align-items: start;
+}
+.moment:last-child { border-bottom: var(--trait) solid rgba(69, 116, 117, .3); }
+.moment__h { font-variant-numeric: tabular-nums; color: var(--enseigne); padding-top: .35em; }
+.moment__t { font-family: 'Bricolage', sans-serif; font-weight: 600; font-size: clamp(22px, 2vw, 30px); margin: 0 0 6px; letter-spacing: -.015em; transition: color .35s var(--ease); }
+.moment p { margin: 0; color: var(--encre-doux); }
+.moment:hover .moment__t { color: var(--enseigne); }
+
+/* --- La boutique : la photo derrière le verre ------------------------- */
+.boutique { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .84fr); gap: clamp(28px, 4vw, 66px); align-items: end; }
+.boutique__photo { position: relative; }
+.boutique__photo img { width: 100%; height: auto; }
+
+/* --- Horizon : la deuxième maison, sur fond d'encre ------------------- */
+.horizon { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(28px, 4vw, 70px); align-items: center; }
+.horizon__carte { border: var(--trait) solid rgba(175, 211, 197, .45); padding: clamp(22px, 2.6vw, 38px); }
+.horizon__carte dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 10px 22px; }
+.horizon__carte dt { color: var(--verre); opacity: .7; }
+.horizon__carte dd { margin: 0; }
+
+/* --- Les producteurs : un trait qui relie les noms --------------------- */
+.gens { display: flex; flex-wrap: wrap; gap: 0 clamp(16px, 2vw, 30px); align-items: baseline; list-style: none; margin: 0; padding: 0; }
+.gens li { display: flex; align-items: center; gap: clamp(16px, 2vw, 30px); }
+.gens__nom {
+  font-family: 'Bricolage', sans-serif; font-weight: 500;
+  font-size: clamp(24px, 3.1vw, 46px); line-height: 1.28;
+  letter-spacing: -.02em;
+}
+.gens li:not(:last-child)::after { content: ''; width: 5px; height: 5px; background: var(--enseigne); border-radius: 50%; display: block; flex-shrink: 0; }
+
+/* --- Nous trouver ---------------------------------------------------- */
+.trouver { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(30px, 4vw, 76px); align-items: start; }
+.trouver__adresse {
+  font-family: 'Bricolage', sans-serif; font-weight: 600;
+  font-size: clamp(30px, 3.6vw, 56px); line-height: 1.05; letter-spacing: -.025em;
+  margin: 0 0 clamp(18px, 2vw, 28px);
+}
+.trouver__faits { display: grid; gap: 0; margin: 0 0 clamp(22px, 2.4vw, 32px); }
+.fait {
+  display: grid; grid-template-columns: 128px 1fr; gap: 18px;
+  padding: 12px 0; border-top: var(--trait) solid rgba(69, 116, 117, .28);
+  align-items: baseline;
+}
+.fait:last-of-type { border-bottom: var(--trait) solid rgba(69, 116, 117, .28); }
+.fait dd { margin: 0; }
+.trouver__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Un plan dessiné à la main, pas une iframe qui dépose des cookies. */
+.plan { border: var(--trait) solid var(--enseigne); background: var(--blanc); }
+.plan svg { display: block; width: 100%; height: auto; }
+.plan__pied {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  border-top: var(--trait) solid var(--enseigne); padding: 12px 16px;
+}
+
+/* --- Les emplacements photo manquants -------------------------------- */
+/* Honnête : on nomme ce qui manque au lieu de meubler avec une banque d'images. */
+.attente {
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 9px, rgba(69,116,117,.11) 9px 10px),
+    var(--verre-clair);
+  border: var(--trait) dashed var(--enseigne);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 16px; color: var(--enseigne); min-height: 220px;
+}
+.attente span { display: block; max-width: 30ch; }
+
+/* ========================== 9. PIED DE PAGE =========================== */
+/* Le rideau baissé : la dernière section, peinte comme la première. */
+.pied { background: var(--verre); color: var(--enseigne); padding-top: clamp(50px, 6vw, 90px); position: relative; overflow: hidden; }
+.pied__mot {
+  font-family: 'Bricolage', sans-serif; font-weight: 700;
+  font-size: clamp(44px, 9.6vw, 152px); line-height: .92; letter-spacing: -.035em;
+  margin: 0 0 clamp(24px, 3vw, 44px); padding-bottom: .06em;
+  font-variation-settings: 'wdth' 100;
+}
+.pied__mot em { font-style: normal; -webkit-text-stroke: 1.5px var(--enseigne); color: transparent; }
+
+.pied__grille {
+  display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, .9fr));
+  gap: clamp(22px, 2.6vw, 44px);
+  border-top: var(--trait) solid var(--enseigne);
+  padding-top: clamp(24px, 2.6vw, 38px);
+}
+.pied__col h3 { margin: 0 0 12px; }
+.pied__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.pied__col a { text-decoration: none; }
+.pied__col a:hover, .pied__col a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.pied__marque .marque--script { width: 150px; margin-bottom: 12px; }
+
+.pied__bas {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 26px;
+  border-top: var(--trait) solid var(--enseigne);
+  margin-top: clamp(30px, 3.4vw, 50px);
+  padding: 20px 0 26px;
+}
+.pied__legal { display: flex; flex-wrap: wrap; gap: 12px 22px; }
+.pied__legal a { text-decoration: none; }
+.pied__legal a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Signature Vokum : intégrée au rail légal, jamais une réclame. */
+.vokum { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; }
+.vokum a {
+  text-decoration: none; color: var(--enseigne); font-weight: 700;
+  position: relative;
+}
+.vokum a::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: var(--trait); background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .4s var(--ease);
+}
+.vokum a:hover::after, .vokum a:focus-visible::after { transform: scaleX(1); }
+
+/* Les grains semés dans le pied — les mêmes que sur la devanture. */
+.pied__grains { position: absolute; right: var(--marge); top: clamp(20px, 3vw, 46px); width: clamp(110px, 12vw, 176px); pointer-events: none; opacity: .8; }
+
+/* ======================= 10. PAGES SECONDAIRES ======================== */
+/* --- La carte --------------------------------------------------------- */
+.entete { background: var(--verre); color: var(--enseigne); padding: clamp(40px, 5vw, 80px) var(--marge) clamp(30px, 3.4vw, 52px); position: relative; }
+.entete__mot { font-family: 'Bricolage', sans-serif; font-weight: 700; font-size: clamp(44px, 8vw, 116px); line-height: .92; letter-spacing: -.03em; margin: 0; padding-bottom: .05em; }
+.entete__dit { max-width: 44ch; margin-top: clamp(14px, 1.6vw, 22px); }
+
+.service { padding-block: clamp(38px, 4.4vw, 72px); border-top: var(--trait) solid rgba(69, 116, 117, .26); }
+.service:first-of-type { border-top: 0; }
+.service__tete { display: flex; align-items: baseline; gap: clamp(14px, 2vw, 28px); margin-bottom: clamp(20px, 2.2vw, 32px); flex-wrap: wrap; }
+.service__t { font-family: 'Bricolage', sans-serif; font-weight: 600; font-size: clamp(26px, 3vw, 44px); margin: 0; letter-spacing: -.02em; }
+.service__note { margin-left: auto; color: var(--encre-doux); max-width: 40ch; }
+.mets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(30px, 4vw, 70px); }
+.met {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 13px 0; border-bottom: var(--trait) solid rgba(69, 116, 117, .2);
+}
+.met__nom { font-weight: 500; }
+.met__nom span { display: block; font-weight: 400; color: var(--encre-doux); font-size: .9em; }
+.met__conduite { flex: 1; border-bottom: 1px dotted rgba(69, 116, 117, .4); transform: translateY(-4px); }
+.met__prix { font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+.avis {
+  border: var(--trait) solid var(--enseigne);
+  padding: clamp(18px, 2vw, 26px);
+  display: flex; gap: 16px; align-items: flex-start;
+  margin-top: clamp(28px, 3vw, 46px);
+}
+.avis p { margin: 0; }
+
+/* --- Pages légales ---------------------------------------------------- */
+.legal { max-width: 76ch; margin-inline: auto; padding-block: var(--pas); }
+.legal h2 { font-family: 'Bricolage', sans-serif; font-weight: 600; font-size: clamp(22px, 2vw, 30px); letter-spacing: -.015em; margin: 2.2em 0 .5em; }
+.legal h2:first-of-type { margin-top: 0; }
+.legal h3 { font-family: 'Bricolage', sans-serif; font-weight: 600; font-size: 1.05em; margin: 1.6em 0 .3em; }
+.legal p, .legal li { color: var(--encre-doux); }
+.legal a { color: var(--enseigne); }
+.legal ul { padding-left: 1.1em; }
+.legal li { margin-bottom: .4em; }
+.legal .attention {
+  border-left: 3px solid var(--grain); background: var(--verre-pale);
+  padding: 14px 18px; margin: 1.4em 0;
+}
+.legal .attention p { color: var(--encre); margin: 0; }
+
+/* --- 404 -------------------------------------------------------------- */
+.perdu { min-height: 74vh; display: flex; flex-direction: column; justify-content: center; background: var(--verre); color: var(--enseigne); padding: var(--pas) var(--marge); }
+.perdu__mot { font-family: 'Bricolage', sans-serif; font-weight: 700; font-size: clamp(70px, 17vw, 240px); line-height: .84; margin: 0 0 20px; letter-spacing: -.04em; }
+
+/* =========================== 11. MOUVEMENT ============================ */
+/* La buée : une photo n'apparaît jamais par un zoom ni par une découpe.
+   Elle se dégage, comme la condensation qui s'efface sur la vitre. */
+.buee { opacity: 0; filter: blur(13px) saturate(.55) brightness(1.16); }
+.buee.vu {
+  opacity: 1; filter: blur(0) saturate(1) brightness(1);
+  transition: opacity 1s var(--ease), filter 1.5s var(--ease-long);
+}
+
+/* Les textes montent d'un souffle. */
+.leve { opacity: 0; transform: translateY(22px); }
+.leve.vu { opacity: 1; transform: none; transition: opacity .8s var(--ease), transform .9s var(--ease-long); }
+.leve[data-retard="1"].vu { transition-delay: .09s; }
+.leve[data-retard="2"].vu { transition-delay: .18s; }
+.leve[data-retard="3"].vu { transition-delay: .27s; }
+.leve[data-retard="4"].vu { transition-delay: .36s; }
+
+/* Les mots peints se dévoilent ligne à ligne, derrière le meneau. */
+.rideau { overflow: hidden; display: block; }
+.rideau > span { display: block; transform: translateY(102%); }
+.rideau.vu > span { transform: none; transition: transform 1.05s var(--ease-long); }
+
+/* Le trait se dessine. */
+.tracer .trait { stroke-dasharray: var(--l, 400); stroke-dashoffset: var(--l, 400); }
+.tracer.vu .trait { stroke-dashoffset: 0; transition: stroke-dashoffset 1.9s var(--ease-long); }
+
+/* ─────────────────── L'OUVERTURE — « le peintre passe » ───────────────────
+   La peinture se pose de gauche à droite, avec un bord souple : c'est un
+   pinceau, pas un rideau qui tombe ni une découpe qui s'écarte.
+   État par défaut = peint. L'ouverture ne fait que revenir en arrière puis
+   rejouer le geste — si le JS ne tourne pas, tout est déjà là. */
+.peindre {
+  display: block;
+  -webkit-mask-image: linear-gradient(90deg, #000 0 74%, transparent 100%);
+          mask-image: linear-gradient(90deg, #000 0 74%, transparent 100%);
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: left center; mask-position: left center;
+  -webkit-mask-size: 136% 100%;   mask-size: 136% 100%;
+}
+.devanture__marque { width: clamp(190px, 27vw, 400px); }
+.devanture__marque .marque--script { width: 100%; }
+
+html.intro .peindre { -webkit-mask-size: 0% 100%; mask-size: 0% 100%; }
+html.intro-go .peindre {
+  -webkit-mask-size: 136% 100%; mask-size: 136% 100%;
+  transition: -webkit-mask-size .95s var(--ease-long), mask-size .95s var(--ease-long);
+}
+
+/* Le mot d'abord — c'est lui qu'on peint en premier sur un bandeau nu. */
+html.intro-go .devanture__marque { transition-delay: .06s; }
+/* Puis les trois lettrages, dans l'ordre de la journée. */
+html.intro-go .mots__l:nth-child(1) .peindre { transition-delay: .52s; }
+html.intro-go .mots__l:nth-child(2) .peindre { transition-delay: .70s; }
+html.intro-go .mots__l:nth-child(3) .peindre { transition-delay: .88s; }
+
+/* Les fils de guide s'étirent derrière le pinceau. */
+html.intro .mots__fil { transform: translateY(-.42em) scaleX(0); transform-origin: left center; }
+html.intro-go .mots__fil {
+  transform: translateY(-.42em) scaleX(1);
+  transition: transform .8s var(--ease-long);
+}
+html.intro-go .mots__l:nth-child(1) .mots__fil { transition-delay: 1.00s; }
+html.intro-go .mots__l:nth-child(2) .mots__fil { transition-delay: 1.14s; }
+html.intro-go .mots__l:nth-child(3) .mots__fil { transition-delay: 1.28s; }
+
+/* Les mentions se posent au bout du fil. */
+html.intro .mots__l .peint { opacity: 0; }
+html.intro-go .mots__l .peint { opacity: .82; transition: opacity .6s var(--ease); }
+html.intro-go .mots__l:nth-child(1) .peint { transition-delay: 1.30s; }
+html.intro-go .mots__l:nth-child(2) .peint { transition-delay: 1.44s; }
+html.intro-go .mots__l:nth-child(3) .peint { transition-delay: 1.58s; }
+
+/* Le reste de la devanture rejoint la peinture. */
+html.intro .enseigne__nav,
+html.intro .cle,
+html.intro .enseigne__marque,
+html.intro .devanture__lieu,
+html.intro .devanture__socle,
+html.intro .rail-bas { opacity: 0; }
+html.intro-go .enseigne__nav,
+html.intro-go .cle,
+html.intro-go .enseigne__marque,
+html.intro-go .devanture__lieu,
+html.intro-go .devanture__socle,
+html.intro-go .rail-bas { opacity: 1; transition: opacity .8s var(--ease); }
+html.intro-go .enseigne__marque { transition-delay: 1.05s; }
+html.intro-go .enseigne__nav    { transition-delay: 1.15s; }
+html.intro-go .cle              { transition-delay: 1.15s; }
+html.intro-go .devanture__lieu  { transition-delay: 1.20s; }
+html.intro-go .devanture__socle { transition-delay: 1.30s; }
+html.intro-go .rail-bas         { transition-delay: 1.70s; }
+
+/* Les feuilles se dessinent pendant qu'on peint le mot. */
+html.intro-go .devanture__jardin.vu .trait { transition-delay: .35s; }
+
+/* Dernier temps : la vitre se dégage. La buée s'efface une fois le lettrage
+   posé — on regarde la peinture, puis on entre.
+   Son retard est tenu par main.js (`data-vitre`), pas ici : la classe `vu`
+   est posée avant `intro-go`, une règle de retard arriverait après le départ
+   de la transition. */
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within { scroll-behavior: auto; }
+  .buee, .leve, .rideau > span, .tracer .trait {
+    opacity: 1 !important; filter: none !important; transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  *, *::before, *::after {
+    animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important; scroll-behavior: auto !important;
+  }
+}
+
+/* ========================== 12. RESPONSIVE ============================ */
+/* Le mobile n'est pas le desktop empilé : la vitrine se referme sur
+   l'essentiel — les trois mots, l'heure, l'adresse, la porte. */
+@media (max-width: 1080px) {
+  .lieu, .table, .boutique, .horizon, .trouver, .cafe__bas { grid-template-columns: 1fr; }
+  .pied__grille { grid-template-columns: repeat(2, 1fr); }
+  .mets { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 860px) {
+  :root { --nav-h: 62px; }
+  .enseigne__nav { display: none; }
+  .cle { display: block; }
+  .enseigne__marque .marque--baseline { display: none; }
+
+  .devanture__jardin { width: 118px; top: 14px; opacity: .55; }
+  .devanture__in { padding-top: 26px; }
+  .devanture__ligne { justify-content: flex-start; padding-top: 44px; }
+  .devanture__lieu { display: none; }
+
+  /* Les trois mots restent le héros — et sur un écran étroit, le peintre fait
+     ce qu'un peintre fait : il RESSERRE ses lettres pour remplir le carreau
+     plutôt que d'écrire plus petit. C'est l'axe de largeur de Bricolage
+     (wdth 78) qui rend la chose possible : à chasse normale, « Petit déj' »
+     déborderait bien avant d'atteindre cette taille. */
+  .mots__l { padding: 2px 0; }
+  .mots__l .mot {
+    font-size: clamp(48px, 19.5vw, 96px);
+    font-variation-settings: 'wdth' 78, 'opsz' 96;
+  }
+  /* La mention et son fil s'effacent : sans étiquette au bout, le fil ne
+     conduirait nulle part. « Sur place / à emporter / sans réservation »
+     reprend le relais sur le bandeau du trottoir, juste sous la vitre. */
+  .mots__l .peint,
+  .mots__fil { display: none; }
+
+  /* Les libellés de figure ne se coupent jamais en deux : « FIG. » sur une
+     ligne et « 03 » sur la suivante, ça ressemble à une panne. */
+  .lieu__legende .peint,
+  .assiettes figcaption .peint { white-space: nowrap; }
+
+  /* Les moments passent en pile : à deux colonnes, les libellés de largeurs
+     différentes désalignent les titres et le décalage passe pour un accident. */
+  .moment { grid-template-columns: 1fr; gap: 5px; }
+  .moment__h { padding-top: 0; }
+
+  /* Le nom d'une préparation doit pouvoir se replier. À `flex-shrink: 0`, une
+     ligne comme « Matcha, gold, black, ube latte » pousse le prix hors de
+     l'écran sous 360 px et fait déborder toute la page. */
+  .liste li { flex-wrap: wrap; }
+  .liste__nom { flex-shrink: 1; min-width: 0; }
+  .liste__conduite { min-width: 24px; }
+
+  /* Le rail ne garde que son numéro et son nom : la mention de droite
+     déborderait de l'écran. */
+  .rail__titre { display: none; }
+
+  .devanture__socle { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .devanture__horaire { margin-left: 0; text-align: left; }
+
+  .vitre__photo { height: 300px; object-position: 42% 62%; }
+  /* Deux carreaux suffisent sur un écran de téléphone. */
+  .vitre__meneaux i:nth-child(1) { flex: 0 0 34%; }
+  .vitre__meneaux i:nth-child(3) { flex: 1 1 auto; }
+  .vitre__meneaux i:nth-child(5), .vitre__meneaux b:nth-child(4) { display: none; }
+  .vitre__peint { position: static; padding: 14px var(--marge) 18px; background: var(--verre); }
+  .vitre__peint .peint { color: var(--enseigne); text-shadow: none; }
+  .vitre__peint .pastille { background: var(--enseigne); }
+
+  /* La bande du comptoir se resserre à deux carreaux : quatre photos côte à
+     côte sur un téléphone, ce ne sont plus des photos, ce sont des timbres. */
+  .comptoir { grid-template-columns: 1.15fr .85fr; gap: 7px; }
+  .comptoir img { height: clamp(200px, 46vw, 300px); }
+  .comptoir figure:nth-child(2),
+  .comptoir figure:nth-child(4) { transform: none; }
+
+  /* Les assiettes passent à deux colonnes, sans décalage : le rythme
+     éditorial du desktop devient du désordre sur un petit écran. */
+  .assiettes { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .assiettes figure:nth-child(1),
+  .assiettes figure:nth-child(3) { margin-top: 0; }
+  .assiettes figcaption { font-size: .86em; }
+
+  .origines { grid-template-columns: 1fr; }
+  .origine { border-left: 0; padding-inline: 0; border-top: var(--trait) solid rgba(175,211,197,.3); }
+  .origine:first-child { border-top: 0; }
+  .origine__n { font-size: 34px; }
+
+  .gens { display: grid; gap: 0; }
+  .gens li { border-bottom: var(--trait) solid rgba(69,116,117,.24); padding: 9px 0; }
+  .gens li::after { display: none !important; }
+
+  .fait { grid-template-columns: 1fr; gap: 2px; }
+  .fait dt { color: var(--enseigne); }
+
+  .pied__grille { grid-template-columns: 1fr; gap: 26px; }
+  .pied__grains { display: none; }
+  .pied__bas { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .vokum { margin-left: 0; }
+
+  .service__note { margin-left: 0; }
+  .avis { flex-direction: column; gap: 10px; }
+}
+
+@media (max-width: 480px) {
+  /* Sur un petit écran, le mot suffit : la mention encombrerait le bandeau. */
+  .enseigne__mention { display: none; }
+}
+
+@media (max-width: 420px) {
+  .devanture__marque { width: 172px; }
+  .service__tete { gap: 8px; }
+}
+
+/* Mode de contrôle : ?plat coupe le mouvement pour les captures. */
+html[data-plat] .buee, html[data-plat] .leve, html[data-plat] .rideau > span, html[data-plat] .tracer .trait {
+  opacity: 1 !important; filter: none !important; transform: none !important; stroke-dashoffset: 0 !important;
+}
