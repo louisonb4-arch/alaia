@@ -370,8 +370,10 @@
     </div>
   </div>
 
-  <!-- La suite du comptoir. Bord à bord, sans légende : on longe le geste. -->
-  <div class="comptoir">
+  <!-- La suite du comptoir. Bord à bord, sans légende : on longe le geste.
+       Sur mobile la bande défile au doigt : `tabindex` la rend atteignable au
+       clavier, sinon la zone défilante serait inaccessible (WCAG 2.1.1). -->
+  <div class="comptoir" tabindex="0" role="group" aria-label="Le comptoir en images">
     <figure>
       <img class="buee" src="assets/img/cafe-porte-filtre.jpg" width="900" height="1482"
            alt="Une main tient un porte-filtre rempli de café fraîchement moulu, tassé et lissé."

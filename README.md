@@ -65,8 +65,13 @@ remise à zéro sur `load` et `pageshow`).
 - La mention et son **fil** disparaissent (un fil sans étiquette au bout ne conduit nulle
   part) ; « sur place / à emporter / **sans réservation** » reprend le relais sur le
   bandeau du trottoir, sous la vitre.
-- La **bande du comptoir** passe de 4 carreaux inégaux à 2 : quatre photos côte à côte
-  sur un téléphone, ce ne sont plus des photos, ce sont des timbres.
+- La **bande du comptoir** ne devient pas une grille 2×2 — quatre carreaux égaux, c'est
+  précisément ce que la DA refuse, et les photos portrait s'y font écraser en timbres
+  carrés. Le geste du desktop (longer le comptoir) devient **tactile** : une bande qui
+  file sous le doigt, bord à bord, en carreaux toujours inégaux (63 / 50 / 58 / 45 vw).
+  Le débord du carreau suivant sert d'invitation — aucune consigne à écrire. La zone est
+  `tabindex="0"` + `role="group"` : une zone défilante doit rester atteignable au clavier
+  (WCAG 2.1.1).
 - Les **assiettes** passent à 2 colonnes **sans décalage** : le rythme éditorial du
   desktop devient du désordre sur un petit écran.
 - Les **moments** s'empilent, libellé au-dessus du titre : à deux colonnes, des libellés

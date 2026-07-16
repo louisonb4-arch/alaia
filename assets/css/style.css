@@ -828,12 +828,43 @@ html.intro-go .devanture__jardin.vu .trait { transition-delay: .35s; }
   .vitre__peint .peint { color: var(--enseigne); text-shadow: none; }
   .vitre__peint .pastille { background: var(--enseigne); }
 
-  /* La bande du comptoir se resserre à deux carreaux : quatre photos côte à
-     côte sur un téléphone, ce ne sont plus des photos, ce sont des timbres. */
-  .comptoir { grid-template-columns: 1.15fr .85fr; gap: 7px; }
-  .comptoir img { height: clamp(200px, 46vw, 300px); }
-  .comptoir figure:nth-child(2),
-  .comptoir figure:nth-child(4) { transform: none; }
+  /* La bande du comptoir ne devient pas une grille 2×2 : quatre carreaux
+     égaux, c'est exactement ce que la DA refuse, et les photos portrait s'y
+     font écraser en timbres carrés.
+     Sur un téléphone, on garde le geste du desktop — longer le comptoir — en
+     le rendant tactile : une bande qui file sous le doigt, bord à bord, en
+     carreaux toujours inégaux. Le débord du carreau suivant dit qu'on peut
+     faire glisser ; aucune consigne à écrire. */
+  .comptoir {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;   /* ne pas voler le geste à la page */
+    scroll-snap-type: x proximity;    /* assiste sans forcer */
+    -webkit-overflow-scrolling: touch;
+    padding-inline: var(--marge);     /* le 1er carreau s'aligne sur le texte */
+    scrollbar-width: none;
+  }
+  .comptoir::-webkit-scrollbar { display: none; }
+
+  .comptoir figure {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+    transform: none;                  /* les décalages du desktop sautent */
+  }
+  .comptoir img { height: clamp(300px, 54vh, 420px); }
+
+  /* Aucune largeur identique — la règle des meneaux tient aussi au doigt. */
+  .comptoir figure:nth-child(1) img { width: 63vw; }
+  .comptoir figure:nth-child(2) img { width: 50vw; }
+  .comptoir figure:nth-child(3) img { width: 58vw; }
+  .comptoir figure:nth-child(4) img { width: 45vw; }
+
+  /* Le dernier carreau doit pouvoir venir se caler à la marge de droite. */
+  .comptoir::after {
+    content: '';
+    flex: 0 0 calc(var(--marge) - 7px);
+  }
 
   /* Les assiettes passent à deux colonnes, sans décalage : le rythme
      éditorial du desktop devient du désordre sur un petit écran. */
