@@ -840,25 +840,33 @@ html.intro-go .devanture__jardin.vu .trait { transition-delay: .35s; }
     gap: 7px;
     overflow-x: auto;
     overscroll-behavior-x: contain;   /* ne pas voler le geste à la page */
-    scroll-snap-type: x proximity;    /* assiste sans forcer */
     -webkit-overflow-scrolling: touch;
     padding-inline: var(--marge);     /* le 1er carreau s'aligne sur le texte */
     scrollbar-width: none;
+    /* Pas de scroll-snap : la bande se recalait toute seule après le doigt,
+       ce qui se lit comme un flottement. On longe le comptoir, il ne bouge
+       pas de lui-même. */
   }
   .comptoir::-webkit-scrollbar { display: none; }
 
-  .comptoir figure {
-    flex: 0 0 auto;
-    scroll-snap-align: center;
-    transform: none;                  /* les décalages du desktop sautent */
-  }
-  .comptoir img { height: clamp(300px, 54vh, 420px); }
+  .comptoir figure { flex: 0 0 auto; }
 
-  /* Aucune largeur identique — la règle des meneaux tient aussi au doigt. */
-  .comptoir figure:nth-child(1) img { width: 63vw; }
-  .comptoir figure:nth-child(2) img { width: 50vw; }
-  .comptoir figure:nth-child(3) img { width: 58vw; }
-  .comptoir figure:nth-child(4) img { width: 45vw; }
+  /* Les décalages verticaux du desktop DOIVENT être annulés à la même
+     spécificité : `.comptoir figure:nth-child(2)` (0-2-1) l'emporte sur
+     `.comptoir figure` (0-1-1) même depuis une media query — une media query
+     n'ajoute aucune spécificité. Sans ces deux sélecteurs, les carreaux 2 et 4
+     restent posés plus bas que les autres et la bande a l'air de flotter. */
+  .comptoir figure:nth-child(2),
+  .comptoir figure:nth-child(4) { transform: none; }
+
+  /* La photo garde son cadrage : hauteur imposée, largeur déduite du ratio.
+     Rien n'est coupé — un porte-filtre recadré au carré n'est plus un geste,
+     c'est un timbre. */
+  .comptoir img {
+    height: clamp(300px, 52vh, 400px);
+    width: auto;
+    object-fit: contain;
+  }
 
   /* Le dernier carreau doit pouvoir venir se caler à la marge de droite. */
   .comptoir::after {

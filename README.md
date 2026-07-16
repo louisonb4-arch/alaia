@@ -65,13 +65,23 @@ remise à zéro sur `load` et `pageshow`).
 - La mention et son **fil** disparaissent (un fil sans étiquette au bout ne conduit nulle
   part) ; « sur place / à emporter / **sans réservation** » reprend le relais sur le
   bandeau du trottoir, sous la vitre.
-- La **bande du comptoir** ne devient pas une grille 2×2 — quatre carreaux égaux, c'est
-  précisément ce que la DA refuse, et les photos portrait s'y font écraser en timbres
-  carrés. Le geste du desktop (longer le comptoir) devient **tactile** : une bande qui
-  file sous le doigt, bord à bord, en carreaux toujours inégaux (63 / 50 / 58 / 45 vw).
-  Le débord du carreau suivant sert d'invitation — aucune consigne à écrire. La zone est
-  `tabindex="0"` + `role="group"` : une zone défilante doit rester atteignable au clavier
-  (WCAG 2.1.1).
+- La **bande du comptoir** ne devient pas une grille 2×2 — les photos portrait s'y font
+  écraser en timbres carrés. Le geste du desktop (longer le comptoir) devient **tactile** :
+  une bande bord à bord qui file sous le doigt. Le débord du carreau suivant sert
+  d'invitation — aucune consigne à écrire. `tabindex="0"` + `role="group"` : une zone
+  défilante doit rester atteignable au clavier (WCAG 2.1.1).
+  - **Les photos sont entières** : hauteur imposée, largeur déduite du ratio, aucun
+    recadrage. Conséquence assumée : les quatre carreaux ont la même largeur sur mobile.
+    La règle des meneaux (carreaux inégaux) cède ici au cadrage des photos — un
+    porte-filtre coupé au carré n'est plus un geste, c'est un timbre. L'asymétrie vient
+    du débord aux deux bords de la bande, pas de largeurs truquées.
+  - **Pas de `scroll-snap`** : la bande se recalait toute seule après le doigt, ce qui se
+    lit comme un flottement. On longe le comptoir, il ne bouge pas de lui-même.
+  - ⚠️ **Piège de spécificité** : les décalages verticaux du desktop
+    (`.comptoir figure:nth-child(2)`, 0-2-1) l'emportent sur un `.comptoir figure`
+    (0-1-1) même depuis une media query — une media query n'ajoute **aucune**
+    spécificité. Il faut annuler avec les mêmes sélecteurs `:nth-child`, sinon deux
+    carreaux sur quatre restent posés plus bas et la bande a l'air de flotter.
 - Les **assiettes** passent à 2 colonnes **sans décalage** : le rythme éditorial du
   desktop devient du désordre sur un petit écran.
 - Les **moments** s'empilent, libellé au-dessus du titre : à deux colonnes, des libellés
