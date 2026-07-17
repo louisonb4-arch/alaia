@@ -747,6 +747,38 @@ html.intro-go .devanture__jardin.vu .trait { transition-delay: .35s; }
    est posée avant `intro-go`, une règle de retard arriverait après le départ
    de la transition. */
 
+/* ── L'ouverture sur mobile — les trois mots sont la star ──────────────────
+   Sur un téléphone, le fil du peintre et sa mention sont masqués (voir la
+   media query RESPONSIVE) : le hero se réduit aux TROIS GRANDS MOTS. La
+   partition desktop leur laissait pourtant des temps morts — les créneaux des
+   fils (1,00 s) et des mentions (1,58 s) jouaient dans le vide, et l'adresse
+   du trottoir n'arrivait qu'à 1,70 s. On réécrit donc la cadence pour le
+   petit écran : même geste (« le peintre passe »), même encre, mais resserré
+   sur les mots, sans un temps où rien ne se peint. Total ≈ 1,4 s au lieu de
+   ~2,4 s — l'info utile (heures, adresse) accessible bien plus tôt.
+
+   ⚠️ Spécificité : une media query n'ajoute AUCUNE spécificité. Chaque règle
+   ci-dessous reprend donc EXACTEMENT le sélecteur d'origine ; elle ne gagne
+   que parce qu'elle vient plus loin dans la feuille. */
+@media (max-width: 860px) {
+  /* Le pinceau passe plus vite sur un mot étroit — la trace reste souple. */
+  html.intro-go .peindre {
+    transition: -webkit-mask-size .72s var(--ease-long), mask-size .72s var(--ease-long);
+  }
+  /* Les trois mots se peignent en cadence serrée : Petit déj' → Midi → Goûter,
+     l'un derrière l'autre, sans le vide qu'occupaient les fils cachés. */
+  html.intro-go .mots__l:nth-child(1) .peindre { transition-delay: .10s; }
+  html.intro-go .mots__l:nth-child(2) .peindre { transition-delay: .30s; }
+  html.intro-go .mots__l:nth-child(3) .peindre { transition-delay: .50s; }
+
+  /* Le pratique du trottoir suit les mots de près, il ne traîne plus. */
+  html.intro-go .enseigne__marque { transition-delay: .74s; }
+  html.intro-go .enseigne__nav    { transition-delay: .80s; }
+  html.intro-go .cle              { transition-delay: .80s; }
+  html.intro-go .devanture__socle { transition-delay: .78s; }
+  html.intro-go .rail-bas         { transition-delay: 1.02s; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html:focus-within { scroll-behavior: auto; }
   .buee, .leve, .rideau > span, .tracer .trait {

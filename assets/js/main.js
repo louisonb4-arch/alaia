@@ -71,7 +71,12 @@ function revele() {
     // On la déclenche donc à la main, en dernier temps de l'ouverture.
     if (el.hasAttribute('data-vitre')) {
       const enOuverture = document.documentElement.classList.contains('intro');
-      setTimeout(() => el.classList.add('vu'), enOuverture ? 1550 : 0);
+      // Sur mobile l'ouverture est resserrée sur les trois mots (voir la media
+      // query « L'ouverture sur mobile » du CSS) : la vitre se dégage plus tôt
+      // pour rester dans le même souffle que la peinture, sans décrocher.
+      const etroit = window.matchMedia && window.matchMedia('(max-width: 860px)').matches;
+      const retard = enOuverture ? (etroit ? 1000 : 1550) : 0;
+      setTimeout(() => el.classList.add('vu'), retard);
       return;
     }
     oeil.observe(el);
