@@ -65,7 +65,15 @@
 
 /* ============================== 3. SOCLE =============================== */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Une ancre ne se cale plus SOUS l'enseigne collante : elle s'arrête juste
+     dessous, avec un souffle. Détail invisible tant qu'il manque. */
+  scroll-padding-top: calc(var(--nav-h) + 14px);
+  /* Le dessin des lettres passe avant la vitesse : crénage et ligatures. */
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
 html:focus-within { scroll-behavior: smooth; }
 
 body {
@@ -76,6 +84,11 @@ body {
   font-size: clamp(16px, 1.02vw, 18px);
   line-height: 1.62;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Le crénage vient de la fonte, pas d'une approximation ; les ligatures
+     courantes (fi, fl…) et contextuelles se posent. */
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures contextual;
   overflow-x: hidden;
 }
 
@@ -162,6 +175,23 @@ a { color: inherit; }
 .texte { max-width: 58ch; }
 .texte p { margin: 0 0 1.05em; }
 .texte p:last-child { margin-bottom: 0; }
+
+/* L'équilibre des lignes — le détail qui fait « composé », pas « coulé ».
+   Les TITRES ne laissent plus un seul mot tomber sur la dernière ligne
+   (`balance`) ; le CORPS évite les fins de paragraphe trop courtes et les
+   lézardes (`pretty`). Zéro incidence sur la mise en page : seule la
+   répartition du texte dans sa largeur change. Ignoré proprement là où le
+   navigateur ne sait pas encore le faire. */
+.titre, .trouver__adresse, .gens__nom, .origine__t, .moment__t,
+.pied__mot, .entete__mot, .service__t, .legal h2, .legal h3,
+.perdu__mot, .tiroir__lien, .horizon__carte dt {
+  text-wrap: balance;
+}
+.plomb, .texte p, .devanture__dit, .lieu__note span, .moment p,
+.origine p, .service__note, .legal p, .legal li,
+.horizon__carte dd, .attente span, .avis p, .entete__dit {
+  text-wrap: pretty;
+}
 
 /* Un mot souligné d'un trait droit — le trait de l'enseigne, jamais ondulé. */
 .souligne {
@@ -567,8 +597,15 @@ a { color: inherit; }
 }
 .pied__col h3 { margin: 0 0 12px; }
 .pied__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
-.pied__col a { text-decoration: none; }
-.pied__col a:hover, .pied__col a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+/* Le trait du peintre se tire de la gauche au survol — le même geste que la
+   navigation, jamais le souligné brut du navigateur. */
+.pied__col a {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0% var(--trait) no-repeat;
+  padding-bottom: 2px;
+  transition: background-size .4s var(--ease);
+}
+.pied__col a:hover, .pied__col a:focus-visible { background-size: 100% var(--trait); }
 .pied__marque .marque--script { width: 150px; margin-bottom: 12px; }
 
 .pied__bas {
@@ -578,8 +615,13 @@ a { color: inherit; }
   padding: 20px 0 26px;
 }
 .pied__legal { display: flex; flex-wrap: wrap; gap: 12px 22px; }
-.pied__legal a { text-decoration: none; }
-.pied__legal a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pied__legal a {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0% var(--trait) no-repeat;
+  padding-bottom: 2px;
+  transition: background-size .4s var(--ease);
+}
+.pied__legal a:hover, .pied__legal a:focus-visible { background-size: 100% var(--trait); }
 
 /* Signature Vokum : intégrée au rail légal, jamais une réclame. */
 .vokum { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; }
@@ -633,7 +675,13 @@ a { color: inherit; }
 .legal h2:first-of-type { margin-top: 0; }
 .legal h3 { font-family: 'Bricolage', sans-serif; font-weight: 600; font-size: 1.05em; margin: 1.6em 0 .3em; }
 .legal p, .legal li { color: var(--encre-doux); }
-.legal a { color: var(--enseigne); }
+.legal a {
+  color: var(--enseigne); text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% var(--trait) no-repeat;
+  padding-bottom: 1.5px;
+  transition: color .3s var(--ease);
+}
+.legal a:hover, .legal a:focus-visible { color: var(--encre); }
 .legal ul { padding-left: 1.1em; }
 .legal li { margin-bottom: .4em; }
 .legal .attention {
